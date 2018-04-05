@@ -68,6 +68,27 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     // Action Listener Method
     public void actionPerformed (ActionEvent e) {
         timer.start();
+
+        if(play) {
+            // change direction of the ball when it hits the border
+            ballposX = ballposX + ballXdir;
+            ballposY = ballposY + ballYdir;
+
+            // for left border
+            if (ballposX < 0) {
+                ballXdir = -ballXdir;
+            }
+            // for top border
+            if (ballposY < 0) {
+                ballYdir = -ballYdir;
+            }
+            // for right border
+            if (ballposX > 670) {
+                ballXdir = -ballXdir;
+            }
+        }
+
+        // repaint method draws the slider again after moving to a new position
         repaint();
     }
 
