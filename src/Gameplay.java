@@ -32,8 +32,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int ballXdir = -1;
     private int ballYdir = -2;
 
+    private BrickGenerator brick;
+
     // default constructor
     public Gameplay() {
+        // create object of BrickGenerator
+        brick = new BrickGenerator(3,7);
         // detect arrow movements
         addKeyListener(this);
         setFocusable(true);
@@ -47,6 +51,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         // background
         g.setColor(Color.black);
         g.fillRect(1, 1 , 692, 592);
+
+        // call draw function for drawing bricks
+        brick.draw((Graphics2D)g);
 
         // borders;
         g.setColor(Color.yellow);
@@ -70,6 +77,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         timer.start();
 
         if(play) {
+
             // change direction of the ball when it hits the border
             ballposX = ballposX + ballXdir;
             ballposY = ballposY + ballYdir;
