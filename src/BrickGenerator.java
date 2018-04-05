@@ -14,8 +14,6 @@ public class BrickGenerator {
             }
         }
     }
-//        brickWidth = 540/col;
-//        brickHeight = 150/row;
 
     // draw the bricks
     public void draw(Graphics2D g) {
@@ -34,5 +32,10 @@ public class BrickGenerator {
             }
         }
     }
+
+    public void setBrickVAlue(int value, int row, int col) {
+        map[row][col] = value;
+    }
+
 }
 

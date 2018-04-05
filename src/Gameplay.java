@@ -78,6 +78,35 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
 
         if(play) {
 
+            // collision detection between ball and slider
+            // convert oval to rectangle
+            Rectangle oval = new Rectangle(ballposX, ballposY, 20, 20);
+            Rectangle rectangle = new Rectangle(playerX, 550, 100, 8);
+            if (oval.intersects(rectangle ) ) {
+                ballYdir = -ballYdir;
+            }
+
+            // detect collision betwenn bricks and ball
+            for (int i = 0; i < brick.map.length; i++) {
+                for (int j = 0; j < brick.map[0].length; j++) {
+                    if (brick.map[i][j] > 0) {
+                        int brickWidth = brick.brickWidth;
+                        int brickHeight = brick.brickHeight;
+                        int brickX = j * brick.brickWidth + 75;
+                        int brickY = i * brick.brickWidth + 50;
+
+                        Rectangle rect = new Rectangle(brickX, brickY, brickWidth, brickHeight);
+                        Rectangle ballRect = new Rectangle(ballposX, ballposY, 20, 20);
+                        Rectangle brickRect = rect;
+
+                        // when ball and brick intersects
+                        if(ballRect.intersects(brickRect)) {
+                            brick.setBrickVAlue(0, i ,j);
+                        }
+                    }
+                }
+            }
+
             // change direction of the ball when it hits the border
             ballposX = ballposX + ballXdir;
             ballposY = ballposY + ballYdir;
