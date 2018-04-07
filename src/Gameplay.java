@@ -27,9 +27,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
     private int playerX = 310;
 
     // starting position of ball
-    private int ballposX = 120;
+    private int ballposX = 520;
     private int ballposY = 350;
-    private int ballXdir = -1;
+    private int ballXdir = 1;
     private int ballYdir = -2;
 
     private BrickGenerator brick;
@@ -61,6 +61,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         g.fillRect(0, 0, 692, 3);
         g.fillRect(691, 0, 3, 592);
 
+        // scores
+        g.setColor(Color.white);
+        g.setFont(new Font("serif", Font.BOLD, 25));
+        g.drawString("Score: " +score, 590, 30);
+
         // slider
         g.setColor(Color.green);
         g.fillRect(playerX, 550, 100, 8);
@@ -68,6 +73,34 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
         // ball
         g.setColor(Color.yellow);
         g.fillOval(ballposX, ballposY, 20, 20);
+
+        // game won
+        if (totalBricks <= 0) {
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+
+            g.setColor(Color.red);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("You Won, Your Score is: " +score, 150, 300);
+
+            g.setFont(new Font("serif", Font.BOLD, 25));
+            g.drawString("Press Enter to Restart: ", 230, 350);
+        }
+
+        // gameover
+        if (ballposY > 570) {
+            play = false;
+            ballXdir = 0;
+            ballYdir = 0;
+
+            g.setColor(Color.red);
+            g.setFont(new Font("serif", Font.BOLD, 30));
+            g.drawString("Game Over, Your Score is: " +score, 150, 300);
+
+            g.setFont(new Font("serif", Font.BOLD, 25));
+            g.drawString("Press Enter to Restart: ", 230, 350);
+        }
 
         g.dispose();
     }
@@ -87,7 +120,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
             }
 
             // detect collision betwenn bricks and ball
-            for (int i = 0; i < brick.map.length; i++) {
+            A: for (int i = 0; i < brick.map.length; i++) {
                 for (int j = 0; j < brick.map[0].length; j++) {
                     if (brick.map[i][j] > 0) {
                         int brickWidth = brick.brickWidth;
@@ -102,6 +135,16 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                         // when ball and brick intersects
                         if(ballRect.intersects(brickRect)) {
                             brick.setBrickVAlue(0, i ,j);
+                            totalBricks--;
+                            score += 5;
+
+//                            // left and right intersection
+                            if (ballposX + 19 <= brickRect.x || ballposX + 1 >= brickRect.x + brickRect.width) {
+                                ballXdir = -ballXdir;
+                            } else {
+                                ballYdir = -ballYdir;
+                            }
+                            break A;
                         }
                     }
                 }
@@ -151,6 +194,24 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener{
                 moveLeft();
             }
         }
+
+        // restart event
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(!play) {
+                play = true;
+                ballposX = 520;
+                ballposY = 350;
+                ballXdir = 1;
+                ballYdir = -2;
+                playerX = 310;
+                score = 0;
+                totalBricks = 21;
+                brick = new BrickGenerator(3, 7);
+
+                repaint();
+            }
+        }
+
     }
 
     public void moveRight() {
